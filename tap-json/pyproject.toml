@@ -1,0 +1,67 @@
+[tool.poetry]
+name = "tap-json"
+version = "0.0.1"
+description = "`tap-json` is a Singer tap for json, built with the Meltano Singer SDK."
+readme = "README.md"
+authors = ["Siim Tolk <siimtolk@gmail.com>"]
+keywords = [
+    "ELT",
+    "json",
+]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+importlib-resources = { version = "==6.1.*", python = "<3.9" }
+singer-sdk = { version="~=0.35.2" }
+fs-s3fs = { version = "~=1.1.1", optional = true }
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.4.0"
+singer-sdk = { version="~=0.35.2", extras = ["testing"] }
+
+[tool.poetry.extras]
+s3 = ["fs-s3fs"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+
+[tool.ruff]
+src = ["tap_json"]
+target-version = "py38"
+
+[tool.ruff.lint]
+ignore = [
+    "ANN101",  # missing-type-self
+    "ANN102",  # missing-type-cls
+    "COM812",  # missing-trailing-comma
+    "ISC001",  # single-line-implicit-string-concatenation
+]
+select = ["ALL"]
+
+[tool.ruff.lint.flake8-annotations]
+allow-star-arg-any = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["tap_json"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[build-system]
+requires = ["poetry-core==1.8.1"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+# CLI declaration
+tap-json = 'tap_json.tap:Tapjson.cli'

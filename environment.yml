@@ -1,0 +1,11 @@
+name: tap_json
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11  # Specify the version of Python you need
+  - pip
+  - pip:
+    - meltano>=2.0
+    - cookiecutter
+    - poetry
