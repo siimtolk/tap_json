@@ -6,6 +6,6 @@ dependencies:
   - python=3.11  # Specify the version of Python you need
   - pip
   - pip:
-    - meltano>=2.0
+    - meltano
     - cookiecutter
     - poetry

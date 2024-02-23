@@ -1,0 +1,20 @@
+[
+    {
+        "fieldA": "2valueA",
+        "fieldB": "2valueB",
+        "fieldC": 123,
+        "fieldD": 321
+    },
+    {
+        "fieldA": "3valueA",
+        "fieldB": "3valueB",
+        "fieldC": 143,
+        "fieldD": 2300
+    },
+    {
+        "fieldA": "4valueA",
+        "fieldB": "4valueB",
+        "fieldC": 666,
+        "fieldD": 234234
+    }
+]

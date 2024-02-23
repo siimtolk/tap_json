@@ -1,58 +1,96 @@
-"""json tap class."""
+"""CSV tap class."""
 
 from __future__ import annotations
 
-from singer_sdk import Tap
+import json
+import os
+from typing import List
+
+from singer_sdk import Stream, Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
+from singer_sdk.helpers._classproperty import classproperty
+from singer_sdk.helpers.capabilities import TapCapabilities
 
-# TODO: Import your custom stream types here:
-from tap_json import streams
+from tap_json.client import JSONStream
 
 
-class Tapjson(Tap):
-    """json tap class."""
+class TapJSON(Tap):
+    """JSON tap class."""
 
     name = "tap-json"
 
-    # TODO: Update this section with the actual config values you expect:
     config_jsonschema = th.PropertiesList(
         th.Property(
-            "auth_token",
+            "files",
+            th.ArrayType(
+                th.ObjectType(
+                    th.Property("entity", th.StringType, required=True),
+                    th.Property("path", th.StringType, required=True),
+                    th.Property("payload_field_name", th.StringType, required=False, default="payload"),
+                    th.Property("extract_fields", th.ArrayType(th.StringType), required=False, default=[]),
+                    th.Property(
+                        "encoding", th.StringType, required=False, default="utf-8"
+                    ),
+                )
+            ),
+            description="An array of json file stream settings.",
+        ),
+        th.Property(
+            "json_files_definition",
             th.StringType,
-            required=True,
-            secret=True,  # Flag config as protected.
-            description="The token to authenticate against the API service",
+            description="A path to the JSON file holding an array of input JSON file settings.",
         ),
         th.Property(
-            "project_ids",
-            th.ArrayType(th.StringType),
-            required=True,
-            description="Project IDs to replicate",
-        ),
-        th.Property(
-            "start_date",
-            th.DateTimeType,
-            description="The earliest record date to sync",
-        ),
-        th.Property(
-            "api_url",
-            th.StringType,
-            default="https://api.mysample.com",
-            description="The url for the API service",
+            "add_metadata_columns",
+            th.BooleanType,
+            required=False,
+            default=False,
+            description=(
+                "When True, add the metadata columns (`_sdc_source_file`, "
+                "`_sdc_source_file_mtime`, `_sdc_source_lineno`) to output."
+            ),
         ),
     ).to_dict()
 
-    def discover_streams(self) -> list[streams.jsonStream]:
-        """Return a list of discovered streams.
-
-        Returns:
-            A list of discovered streams.
-        """
+    @classproperty
+    def capabilities(self) -> list[TapCapabilities]:
+        """Get tap capabilites."""
         return [
-            streams.GroupsStream(self),
-            streams.UsersStream(self),
+            TapCapabilities.CATALOG,
+            TapCapabilities.DISCOVER,
+        ]
+
+    def get_file_configs(self) -> list[dict]:
+        """Return a list of file configs.
+
+        Either directly from the config.json or in an external file
+        defined by json_files_definition.
+        """
+        json_files = self.config.get("files")
+        json_files_definition = self.config.get("json_files_definition")
+        if json_files_definition:
+            if os.path.isfile(json_files_definition):
+                with open(json_files_definition) as f:
+                    json_files = json.load(f)
+            else:
+                self.logger.error(f"tap-json: '{json_files_definition}' file not found")
+                exit(1)
+        if not json_files:
+            self.logger.error("No JSON file definitions found.")
+            exit(1)
+        return json_files
+
+    def discover_streams(self) -> list[Stream]:
+        """Return a list of discovered streams."""
+        return [
+            JSONStream(
+                tap=self,
+                name=file_config.get("entity"),
+                file_config=file_config,
+            )
+            for file_config in self.get_file_configs()
         ]
 
 
 if __name__ == "__main__":
-    Tapjson.cli()
+    TapJSON.cli()

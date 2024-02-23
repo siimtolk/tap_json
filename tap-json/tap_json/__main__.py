@@ -2,6 +2,6 @@
 
 from __future__ import annotations
 
-from tap_json.tap import Tapjson
+from tap_json.tap import TapJSON
 
-Tapjson.cli()
+TapJSON.cli()

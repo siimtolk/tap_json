@@ -6,24 +6,31 @@ environments:
 - name: test
 plugins:
   extractors:
-  - name: "tap-json"
-    namespace: "tap_json"
-    pip_url: -e .
+  - name: tap-json
+    namespace: tap_json
+    executable: tap-json
     capabilities:
     - state
     - catalog
     - discover
-    - about
-    - stream-maps
     config:
-      start_date: '2010-01-01T00:00:00Z'
+      files:
+      - entity: testjson
+        path: ./tap_json/tests/data/
+        payload_field_name: payload
+        extract_fields:
+        - fieldA
+        - asd #fails if field is not in json. Smth to do with the Properties.
+      add_metadata_columns: true
     settings:
-    # TODO: To configure using Meltano, declare settings and their types here:
-    - name: username
-    - name: password
-      kind: password
-    - name: start_date
-      value: '2010-01-01T00:00:00Z'
+      - name: json_files_definition
+        description: "Project-relative path to JSON file holding array of objects with keys: `entity`, `path`, `extract_fields`, and `encoding` (Optional)."
+        documentation: https://gitlab.com/meltano/tap-csv#run
+        label: JSON Files Definition
+        placeholder: Ex. files-def.json
+      - name: add_metadata_columns
+        description: When True, add the metadata columns (`_sdc_source_file`, `_sdc_source_file_mtime`, `_sdc_source_lineno`) to output.
+        kind: boolean
   loaders:
   - name: target-jsonl
     variant: andyh1203
