@@ -20,7 +20,8 @@ plugins:
         payload_field_name: payload
         extract_fields:
         - fieldA
-        - asd #fails if field is not in json. Smth to do with the Properties.
+        - fieldD
+        - bla
       add_metadata_columns: true
     settings:
       - name: json_files_definition

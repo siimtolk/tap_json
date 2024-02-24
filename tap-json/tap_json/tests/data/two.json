@@ -9,7 +9,8 @@
         "fieldA": "3valueA",
         "fieldB": "3valueB",
         "fieldC": 143,
-        "fieldD": 2300
+        "fieldD": 2300,
+        "bla"   : 666.666
     },
     {
         "fieldA": "4valueA",

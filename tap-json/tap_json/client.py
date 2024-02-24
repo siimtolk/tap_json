@@ -15,6 +15,8 @@ SDC_SOURCE_LINENO_COLUMN = "_sdc_source_lineno"
 SDC_SOURCE_FILE_MTIME_COLUMN = "_sdc_source_file_mtime"
 
 
+
+
 class JSONStream(Stream):
     """Stream class for JSON streams."""
 
@@ -48,7 +50,8 @@ class JSONStream(Stream):
                 row_table = []
                 if len(self.extract_fields_list)>0:
                     for fn in self.extract_fields_list:
-                        row_table.append(row.get(fn, th.StringType))
+                        value = str(row.get(fn)) if fn in row else None
+                        row_table.append(value)
 
                 
                 row_table.append(f"{row}")
