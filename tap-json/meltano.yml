@@ -14,15 +14,16 @@ plugins:
     - catalog
     - discover
     config:
-      files:
-      - entity: testjson
-        path: ./tap_json/tests/data/
-        payload_field_name: payload
-        extract_fields:
-        - fieldA
-        - fieldD
-        - bla
+      #files:
+      # - entity: testjson
+      #   path: ./tap_json/tests/data/
+      #   # payload_field_name: payload
+      #   # extract_fields:
+      #   # - fieldA
+      #   # - fieldD
+      #   # - bla
       add_metadata_columns: true
+      json_files_definition: ./tap_json/tests/config_file.json
     settings:
       - name: json_files_definition
         description: "Project-relative path to JSON file holding array of objects with keys: `entity`, `path`, `extract_fields`, and `encoding` (Optional)."

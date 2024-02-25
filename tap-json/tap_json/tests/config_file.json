@@ -1,0 +1,13 @@
+{"files" : 
+[
+    {	
+        "entity" : "one",
+        "path" : "./tap_json/tests/data/one.json",
+        "extract_fields" : [""]
+},
+{	"entity" : "two",
+    "path" : "./tap_json/tests/data/two.json",
+    "extract_fields" : ["asd"]
+}
+]
+}
