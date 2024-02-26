@@ -54,7 +54,7 @@ class JSONStream(Stream):
                         row_table.append(value)
 
                 
-                row_table.append(f"{row}")
+                row_table.append(f"{json.dumps(row)}")
 
                 if self.config.get("add_metadata_columns", False):
                     row = [file_path, file_last_modified, file_lineno, *row_table]
