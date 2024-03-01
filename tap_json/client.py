@@ -14,8 +14,7 @@ SDC_SOURCE_FILE_COLUMN = "_sdc_source_file"
 SDC_SOURCE_LINENO_COLUMN = "_sdc_source_lineno"
 SDC_SOURCE_FILE_MTIME_COLUMN = "_sdc_source_file_mtime"
 
-
-
+from tap_json.util import PROCESSED_FILES_LOG_PATH, log_processed_file_path, is_file_processed
 
 class JSONStream(Stream):
     """Stream class for JSON streams."""
@@ -28,6 +27,7 @@ class JSONStream(Stream):
         # cache file_config so we dont need to go iterating the config list again later
         self.file_config = kwargs.pop("file_config")
         super().__init__(*args, **kwargs)
+    
 
     def get_records(self, context: dict | None) -> Iterable[dict]:
         """Return a generator of row-type dictionary objects.
@@ -36,7 +36,13 @@ class JSONStream(Stream):
         stream if partitioning is required for the stream. Most implementations do not
         require partitioning and should ignore the `context` argument.
         """
+       
+
         for file_path in self.get_file_paths():
+            # Skip processed filesS
+            if is_file_processed(file_path):
+                continue
+
             file_last_modified = datetime.fromtimestamp(
                 os.path.getmtime(file_path), timezone.utc
             )
@@ -60,6 +66,8 @@ class JSONStream(Stream):
                     row = [file_path, file_last_modified, file_lineno, *row_table]
 
                 yield dict(zip(self.header, row))
+            # Mark filepath as processed
+            log_processed_file_path(file_path)
 
     def _get_recursive_file_paths(self, file_path: str) -> list:
         file_paths = []

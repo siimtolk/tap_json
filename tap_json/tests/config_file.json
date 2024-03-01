@@ -1,11 +1,17 @@
 [
-    {	
-        "entity" : "one",
-        "path" : "./tap_json/tests/data/one.json",
-        "extract_fields" : ["FieldA", "FieldB"]
-},
-{	"entity" : "two",
-    "path" : "./tap_json/tests/data/two.json",
-    "extract_fields" : ["asd"]
-}
+    {
+        "entity": "one",
+        "path": "./tap_json/tests/data/one/",
+        "extract_fields": [
+            "FieldA",
+            "FieldB"
+        ]
+    },
+    {
+        "entity": "two",
+        "path": "./tap_json/tests/data/subfolder/",
+        "extract_fields": [
+            "asd"
+        ]
+    }
 ]
