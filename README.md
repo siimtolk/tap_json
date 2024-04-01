@@ -13,6 +13,8 @@ This 'tap-json' is based on 'tap-csv' (git+https://github.com/MeltanoLabs/tap-cs
 
 Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
 
+Processed files are logged in .meltano/logs/tap_json/processed_files.log
+and when path is listed, it is omitted from processing the next time.
 
 ## Settings
 
